@@ -14,7 +14,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         try {
-            tvText.text = EncryptCore.getInstant().getPackageName()
+            tvText.text = EncryptCore.getInstant().getTest()
+            tvText2.text =   EncryptCore.getInstant().get(EncryptCore.getInstant().getTest())
         }catch (e:Exception){
             e.printStackTrace()
         }catch (e:NoSuchMethodError){

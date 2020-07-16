@@ -47,5 +47,23 @@ fun getPackage(env: CPointer<JNIEnvVar>,context:jobject?):jstring?{
 
 
 
+@CName("Java_com_show_plugin_EncryptCore_get")
+fun get(env: CPointer<JNIEnvVar>,thiz: jobject,text:jstring):jstring?{
+    memScoped {
+        val pointer = env.pointed.pointed!!
+        val out = pointer.GetStringChars!!.invoke(env,text,null)!!.toKStringFromUtf16()
+        return pointer.NewStringUTF!!.invoke(env,getTest(packageName.toLong(),out).cstr.ptr)
+    }
+}
+
+
+@CName("Java_com_show_plugin_EncryptCore_getTest")
+fun getTest(env: CPointer<JNIEnvVar>):jstring?{
+    memScoped {
+        val pointer = env.pointed.pointed!!
+        return pointer.NewStringUTF!!.invoke(env,createTest(packageName.toLong()).cstr.ptr)
+    }
+}
+
 
 
