@@ -8,6 +8,7 @@ plugins {
 val jniLibDir = File(project.buildDir, arrayOf("generated", "jniLibs").joinToString(File.separator))
 
 kotlin {
+
     androidNativeArm32 {
         binaries {
             sharedLib("KSharelib") {
@@ -41,6 +42,11 @@ android {
         ndk {
             abiFilters("armeabi-v7a")
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     sourceSets {

@@ -28,9 +28,12 @@ private fun log(any: Any){
     __android_log_print(ANDROID_LOG_INFO.toInt(), "222222222", "${any}")
 }
 
-
-@CName("Java_com_show_plugin_EncryptCore_getPackageName")
-fun getPackageName() = packageName
+private fun getKey(env: CPointer<JNIEnvVar>):String{
+   return memScoped {
+       val pointer = env.pointed.pointed!!
+       pointer.GetStringUTFChars!!.invoke(env,packageName,null)!!.toKStringFromUtf8()
+   }
+}
 
 
 fun getPackage(env: CPointer<JNIEnvVar>,context:jobject?):jstring?{
@@ -47,21 +50,27 @@ fun getPackage(env: CPointer<JNIEnvVar>,context:jobject?):jstring?{
 
 
 
+@ExperimentalStdlibApi
 @CName("Java_com_show_plugin_EncryptCore_get")
 fun get(env: CPointer<JNIEnvVar>,thiz: jobject,text:jstring):jstring?{
     memScoped {
         val pointer = env.pointed.pointed!!
-        val out = pointer.GetStringChars!!.invoke(env,text,null)!!.toKStringFromUtf16()
-        return pointer.NewStringUTF!!.invoke(env,getTest(packageName.toLong(),out).cstr.ptr)
+        val out = pointer.GetStringUTFChars!!.invoke(env,text,null)!!.toKStringFromUtf8()
+        val key = getKey(env)
+        log(key)
+        return pointer.NewStringUTF!!.invoke(env, RC4(key,out).cstr.ptr)
     }
 }
 
 
+@ExperimentalStdlibApi
 @CName("Java_com_show_plugin_EncryptCore_getTest")
 fun getTest(env: CPointer<JNIEnvVar>):jstring?{
     memScoped {
         val pointer = env.pointed.pointed!!
-        return pointer.NewStringUTF!!.invoke(env,createTest(packageName.toLong()).cstr.ptr)
+        val key = getKey(env)
+        log(key)
+        return pointer.NewStringUTF!!.invoke(env, RC4(key,"ILoo").cstr.ptr)
     }
 }
 

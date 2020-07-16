@@ -17,8 +17,6 @@ class EncryptCore {
 
     external fun initCore()
 
-    external fun getPackageName():String
-
     external fun getTest():String
 
     external fun get(text:String):String
