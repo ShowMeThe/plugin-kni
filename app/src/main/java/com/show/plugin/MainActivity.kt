@@ -10,18 +10,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        try {
-            tvText.text = EncryptCore.getInstant().getTest()
-            tvText2.text =   EncryptCore.getInstant().get(EncryptCore.getInstant().getTest())
-        }catch (e:Exception){
-            e.printStackTrace()
-        }catch (e:NoSuchMethodError){
-            e.printStackTrace()
-        }
 
+        val code = EncryptCore.getInstant().encode("oidfjasjoi2que2haknsdJdakdpoew")
+        val code2 = EncryptCore.getInstant().decode(code)
 
-
-
+        tvText.text = code
+        tvText2.text = code2
 
     }
 

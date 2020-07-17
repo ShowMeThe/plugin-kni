@@ -9,10 +9,31 @@ val jniLibDir = File(project.buildDir, arrayOf("generated", "jniLibs").joinToStr
 
 kotlin {
 
+    androidNativeArm64 {
+        binaries {
+            sharedLib("KSharelib") {
+                if(buildType == NativeBuildType.RELEASE){
+                    linkTask.doLast {
+                        copy {
+                            from(outputFile)
+                            into(File(jniLibDir, "arm64-v8a"))
+                        }
+                    }
+
+                    afterEvaluate {
+                        val preReleaseBuild by tasks.getting{
+
+                        }
+                        preReleaseBuild.dependsOn(linkTask)
+                    }
+                }
+            }
+        }
+    }
     androidNativeArm32 {
         binaries {
             sharedLib("KSharelib") {
-                if(buildType == NativeBuildType.DEBUG){
+                if(buildType == NativeBuildType.RELEASE){
                     linkTask.doLast {
                         copy {
                             from(outputFile)
@@ -41,6 +62,7 @@ android {
 
         ndk {
             abiFilters("armeabi-v7a")
+            abiFilters("arm64-v8a")
         }
     }
 

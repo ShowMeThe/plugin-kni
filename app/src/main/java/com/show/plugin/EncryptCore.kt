@@ -17,7 +17,7 @@ class EncryptCore {
 
     external fun initCore()
 
-    external fun getTest():String
+    external fun encode(text:String):String
 
-    external fun get(text:String):String
+    external fun decode(text:String):String
 }
