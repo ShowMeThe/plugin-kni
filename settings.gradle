@@ -1,3 +1,4 @@
+include ':plugin'
 include ':nativeLib'
 include ':app'
 rootProject.name = "plugin-kni"
