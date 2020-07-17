@@ -1,17 +1,14 @@
 package com.show.plugin
 
-import android.content.Context
-
 
 class EncryptCore {
-
 
     init {
         System.loadLibrary("KSharelib")
         initCore()
     }
     companion object{
-        private val ins by  lazy { EncryptCore() }
+        private val ins = EncryptCore()
         fun  getInstant() = ins
     }
 
