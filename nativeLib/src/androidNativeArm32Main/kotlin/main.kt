@@ -3,7 +3,7 @@ import platform.android.*
 
 
 var packageName :jstring? = null
-var offset:Long = 50
+var signNature :jstring? = null
 var key:String? = null
 
 @CName("Java_com_show_plugin_EncryptCore_initCore")
@@ -18,7 +18,7 @@ fun initCore(env: CPointer<JNIEnvVar>){
                 "()Landroid/app/Application;".cstr.ptr
             )
             if (currentApplicationMethodId !== null) {
-               val context = pointer.CallStaticObjectMethodA!!.invoke(env,
+                val context = pointer.CallStaticObjectMethodA!!.invoke(env,
                     applicationClz, currentApplicationMethodId,null)
                 getPackage(env, context)
             }
@@ -31,30 +31,28 @@ private fun log(any: Any){
 }
 
 private fun getKey(env: CPointer<JNIEnvVar>):String{
-   return memScoped {
-       val pointer = env.pointed.pointed!!
-       pointer.GetStringUTFChars!!.invoke(env,packageName,null)!!.toKStringFromUtf8()
-   }
+    return memScoped {
+        val pointer = env.pointed.pointed!!
+        pointer.GetStringUTFChars!!.invoke(env,packageName,null)!!.toKStringFromUtf8()
+    }
 }
 
 
 fun getPackage(env: CPointer<JNIEnvVar>,context:jobject?):jstring?{
-   memScoped {
-       val pointer = env.pointed.pointed!!
-       val contextClz = pointer.GetObjectClass!!.invoke(env,context)
-       val getPackageNameMethodId  = pointer.GetMethodID!!.invoke(
-           env,contextClz,"getPackageName".cstr.ptr,"()Ljava/lang/String;".cstr.ptr)
-       val name =  pointer.CallObjectMethodA!!.invoke(env,context,getPackageNameMethodId,null) as jstring
-       packageName = pointer.NewGlobalRef!!.invoke(env,name)
-       key = getKey(env)
-       offset = (key!!.first().toInt() * key!!.last().toInt()).toLong()
-       return packageName
-   }
+    memScoped {
+        val pointer = env.pointed.pointed!!
+        val contextClz = pointer.GetObjectClass!!.invoke(env,context)
+        val getPackageNameMethodId  = pointer.GetMethodID!!.invoke(
+            env,contextClz,"getPackageName".cstr.ptr,"()Ljava/lang/String;".cstr.ptr)
+        val name =  pointer.CallObjectMethodA!!.invoke(env,context,getPackageNameMethodId,null) as jstring
+        packageName = pointer.NewGlobalRef!!.invoke(env,name)
+        key = getKey(env)
+        return packageName
+    }
 }
 
 
 
-@ExperimentalStdlibApi
 @CName("Java_com_show_plugin_EncryptCore_decode")
 fun decode(env: CPointer<JNIEnvVar>,thiz:jobject ,text:jstring):jstring?{
     memScoped {
@@ -65,7 +63,7 @@ fun decode(env: CPointer<JNIEnvVar>,thiz:jobject ,text:jstring):jstring?{
 }
 
 
-@ExperimentalStdlibApi
+
 @CName("Java_com_show_plugin_EncryptCore_encode")
 fun encode(env: CPointer<JNIEnvVar>,thiz:jobject ,text:jstring):jstring?{
     memScoped {

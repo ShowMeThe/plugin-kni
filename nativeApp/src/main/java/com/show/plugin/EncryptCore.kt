@@ -1,5 +1,8 @@
 package com.show.plugin
 
+import android.content.pm.PackageInfo
+import android.content.pm.Signature
+
 
 class EncryptCore {
 
