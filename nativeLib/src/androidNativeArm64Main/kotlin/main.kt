@@ -47,7 +47,7 @@ fun getPackage(env: CPointer<JNIEnvVar>):jstring?{
            env,contextClz,"getPackageName".cstr.ptr,"()Ljava/lang/String;".cstr.ptr)
        val name =  pointer.CallObjectMethodA!!.invoke(env,context,getPackageNameMethodId,null) as jstring
        packageName = pointer.NewGlobalRef!!.invoke(env,name)
-       getInfo(env)
+       //getInfo(env)
        return packageName
    }
 }
@@ -100,10 +100,9 @@ fun decode(env: CPointer<JNIEnvVar>,thiz:jobject ,text:jstring):jstring?{
     memScoped {
         val pointer = env.pointed.pointed!!
         val out = pointer.GetStringUTFChars!!.invoke(env,text,null)!!.toKStringFromUtf8()
-        return pointer.NewStringUTF!!.invoke(env, rC4(key!!,out).cstr.ptr)
+        return pointer.NewStringUTF!!.invoke(env, rC4(getString(packageName!!,env),out).cstr.ptr)
     }
 }
-
 
 
 @CName("Java_com_show_plugin_EncryptCore_encode")
@@ -111,7 +110,7 @@ fun encode(env: CPointer<JNIEnvVar>,thiz:jobject ,text:jstring):jstring?{
     memScoped {
         val pointer = env.pointed.pointed!!
         val out = pointer.GetStringUTFChars!!.invoke(env,text,null)!!.toKStringFromUtf8()
-        return pointer.NewStringUTF!!.invoke(env, rC4(key!!,out).cstr.ptr)
+        return pointer.NewStringUTF!!.invoke(env, rC4(getString(packageName!!,env),out).cstr.ptr)
     }
 }
 
